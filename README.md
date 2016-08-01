@@ -28,7 +28,11 @@
             urn:nickvl/xspring/aop-logger urn:nickvl/xspring/aop-logger/aop-logger.xsd">
 
         <!-- Activates the logger and @AspectJ style of Spring AOP. There are additional configuration options. -->
-        <aop-logger:annotation-logger/>
+        <aop-logger:annotation-logger>
+            <aop-logger:config>
+                <aop-logger:reflection-to-string skip-null-fields="true" multi-element-structure-crop-threshold="20" />
+            </aop-logger:config>
+        </aop-logger:annotation-logger>
         ...
     </beans>
 
@@ -82,8 +86,8 @@
     /**
      * Billing shop endpoint.
      */
-    @LogDebug
-    @Endpoint
+    @LogInfo
+    @LogException(value = {@Exc(value = Exception.class, stacktrace = false)}, warn = {@Exc({IllegalArgumentException.class})})
     public class BillingShopEndpoint {
 
         private static final String NS = "urn:PaycashShopService";
@@ -91,8 +95,7 @@
         @Autowired
         private ShopService shop;
 
-        @LogInfo
-        @LogException(value = {@Exc(value = Exception.class, stacktrace = true)}, warn = {@Exc({IllegalArgumentException.class, NotEnoughMoneyException.class})})
+
         @ResponsePayload
         @PayloadRoot(localPart = "PaymentContract", namespace = NS)
         public PaymentContractResponse processPaymentContract(@RequestPayload PaymentContract request) {
