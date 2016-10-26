@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.ieyecloud</groupId>
     <artifactId>xspring-aop-logging</artifactId>
-    <version>0.3.3-SNAPSHOT</version>
+    <version>0.3.4-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>NG xSpring AOP logging</name>
     <description>Declarative annotation based logging utility for Java Spring applications</description>
@@ -40,6 +40,7 @@
         <version.aspectj>1.8.5</version.aspectj>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <servlet.version>3.1.0</servlet.version>
 
         <!-- Global build directory, [target] is a default value. It could be overridden right here or in settings.xml
           Example:
@@ -47,6 +48,7 @@
             <ng-xSpring.build.directory>target</ng-xSpring.build.directory>
         -->
         <ng-xSpring.build.directory>target</ng-xSpring.build.directory>
+        
         
         <url.jsNexus>http://10.0.13.124:8081/nexus/content/groups/public</url.jsNexus>
         <url.jsRep>http://10.0.13.124:8081/nexus/content/repositories/JS-Rep/</url.jsRep>
@@ -74,11 +76,18 @@
             <artifactId>aspectjweaver</artifactId>
             <version>${version.aspectj}</version>
         </dependency>
+        <dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>${servlet.version}</version>
+			<scope>provided</scope>
+		</dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <version>${version.spring}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
