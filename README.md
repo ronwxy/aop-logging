@@ -65,7 +65,7 @@
         }
     }
 
-1.3 add ReqIdFilter to your web.xml
+1.3. add ReqIdFilter to your web.xml
 
    <filter>
         <filter-name>aopLogReqIdFilter</filter-name>
