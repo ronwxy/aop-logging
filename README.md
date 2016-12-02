@@ -7,7 +7,7 @@
       <dependency>
             <groupId>com.ieyecloud</groupId>
              <artifactId>xspring-aop-logging</artifactId>
-            <version>0.3.3-SNAPSHOT</version>
+            <version>0.3.4-SNAPSHOT</version>
        </dependency>
     ...
     </dependencies>
@@ -64,6 +64,19 @@
             return aopLogger;
         }
     }
+
+1.3 add ReqIdFilter to your web.xml
+
+   <filter>
+        <filter-name>aopLogReqIdFilter</filter-name>
+        <filter-class>com.github.nickvl.xspring.core.log.aop.ReqIdFilter</filter-class>
+    </filter>
+    
+    <filter-mapping>
+        <filter-name>aopLogReqIdFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
 
 2.Add log annotation on required methods
 
