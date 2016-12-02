@@ -68,7 +68,7 @@
 1.3. add ReqIdFilter to your web.xml
 
 
-   <filter>
+    <filter>
         <filter-name>aopLogReqIdFilter</filter-name>
         <filter-class>com.github.nickvl.xspring.core.log.aop.ReqIdFilter</filter-class>
     </filter>
