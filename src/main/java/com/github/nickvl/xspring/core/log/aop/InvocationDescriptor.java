@@ -5,17 +5,16 @@
 
 package com.github.nickvl.xspring.core.log.aop;
 
+import com.github.nickvl.xspring.core.log.aop.annotation.*;
+import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-
-import com.github.nickvl.xspring.core.log.aop.annotation.LogDebug;
-import com.github.nickvl.xspring.core.log.aop.annotation.LogError;
-import com.github.nickvl.xspring.core.log.aop.annotation.LogException;
-import com.github.nickvl.xspring.core.log.aop.annotation.LogFatal;
-import com.github.nickvl.xspring.core.log.aop.annotation.LogInfo;
-import com.github.nickvl.xspring.core.log.aop.annotation.LogPoint;
-import com.github.nickvl.xspring.core.log.aop.annotation.LogTrace;
-import com.github.nickvl.xspring.core.log.aop.annotation.LogWarn;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * Method descriptor.
@@ -60,8 +59,8 @@ final class InvocationDescriptor {
         }
 
         public InvocationDescriptor build() {
-            LogException logMethodExceptionAnnotation = parseAnnotations(method.getAnnotations(), true);
-            LogException logClassExceptionAnnotation = parseAnnotations(method.getDeclaringClass().getAnnotations(), false);
+            LogException logMethodExceptionAnnotation = parseAnnotations(findMethodAnnotations(method), true);
+            LogException logClassExceptionAnnotation = parseAnnotations(findDeclaringClassAnnotations(method.getDeclaringClass()), false);
 
             if (Utils.hasNotNull(beforeSeverity, defaultSeverity, afterSeverity)) {
                 return new InvocationDescriptor(
@@ -123,6 +122,36 @@ final class InvocationDescriptor {
                     classDefaultSeverity = Utils.max(targetSeverity, classDefaultSeverity);
                 }
             }
+        }
+
+        private Annotation[] findMethodAnnotations(Method method) {
+            Class<?> clazz = method.getDeclaringClass();
+            Annotation[] annotations = method.getAnnotations();
+            if (clazz.getName().startsWith("com.alibaba.dubbo.common.bytecode")) {
+                Set<Method> methods = MethodUtils.getOverrideHierarchy(method, ClassUtils.Interfaces.INCLUDE);
+                annotations = methods.stream().
+                        map(Method::getDeclaredAnnotations).
+                        flatMap(Arrays::stream).
+                        distinct().
+                        toArray(size -> new Annotation[size]);
+            }
+            return annotations;
+        }
+
+        private Annotation[] findDeclaringClassAnnotations(Class<?> clazz) {
+            Annotation[] annotations = clazz.getAnnotations();
+            if (clazz.getName().startsWith("com.alibaba.dubbo.common.bytecode")) {
+                List<Class<?>> superClasses = ClassUtils.getAllSuperclasses(clazz);
+                List<Class<?>> interfaces = ClassUtils.getAllInterfaces(clazz);
+
+                annotations = Stream.concat(superClasses.stream(), interfaces.stream()).
+                        map(Class::getAnnotations).
+                        flatMap(Arrays::stream).
+                        distinct().
+                        toArray(size -> new Annotation[size]);
+            }
+            return annotations;
+
         }
 
     }

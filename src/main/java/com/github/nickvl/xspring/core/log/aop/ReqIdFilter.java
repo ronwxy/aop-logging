@@ -1,13 +1,9 @@
 package com.github.nickvl.xspring.core.log.aop;
 
-import java.io.IOException;
+import org.slf4j.MDC;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
+import java.io.IOException;
 
 public class ReqIdFilter implements Filter {
 
@@ -18,17 +14,19 @@ public class ReqIdFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response,
-            FilterChain chain) throws IOException, ServletException {
+                         FilterChain chain) throws IOException, ServletException {
+
+        MDC.put("reqId", ObjectId.get().toHexString());
         try {
             chain.doFilter(request, response);
         } finally {
-            ReqIdHolder.remove();
+            MDC.clear();
         }
 
     }
 
     @Override
     public void destroy() {
-        
+
     }
 }
