@@ -83,6 +83,9 @@ public class AOPLogger implements InitializingBean {
             try {
                 result = joinPoint.proceed(args);
             } catch (Exception e) {
+                long endTime = System.currentTimeMillis();
+                MDC.put("elapsedTime", Long.toString(endTime - startTime));
+                MDC.put("elapsedSeconds", Double.toString((endTime - startTime) / 1000.0));
                 ExceptionDescriptor exceptionDescriptor = getExceptionDescriptor(descriptor, invocationDescriptor);
                 Class<? extends Exception> resolved = exceptionResolver.resolve(exceptionDescriptor, e);
                 if (resolved != null) {
