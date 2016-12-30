@@ -71,11 +71,16 @@ public class AOPLogger implements InitializingBean {
 
         String methodName = method.getName();
 
+        MDC.put("callingClass", method.getClass().getName());
+        MDC.put("callingMethod", methodName);
+
         if (beforeLoggingOn(invocationDescriptor, logger)) {
             ArgumentDescriptor argumentDescriptor = getArgumentDescriptor(descriptor, method, args.length);
             logStrategies.get(invocationDescriptor.getBeforeSeverity()).logBefore(logger, methodName, args, argumentDescriptor);
         }
+
         long startTime = System.currentTimeMillis();
+
         Object result;
         if (invocationDescriptor.getExceptionAnnotation() == null) {
             result = joinPoint.proceed(args);
@@ -85,7 +90,6 @@ public class AOPLogger implements InitializingBean {
             } catch (Exception e) {
                 long endTime = System.currentTimeMillis();
                 MDC.put("elapsedTime", Long.toString(endTime - startTime));
-                MDC.put("elapsedSeconds", Double.toString((endTime - startTime) / 1000.0));
                 ExceptionDescriptor exceptionDescriptor = getExceptionDescriptor(descriptor, invocationDescriptor);
                 Class<? extends Exception> resolved = exceptionResolver.resolve(exceptionDescriptor, e);
                 if (resolved != null) {
@@ -99,11 +103,13 @@ public class AOPLogger implements InitializingBean {
         }
         long endTime = System.currentTimeMillis();
         MDC.put("elapsedTime", Long.toString(endTime - startTime));
-        MDC.put("elapsedSeconds", Double.toString((endTime - startTime) / 1000.0));
         if (afterLoggingOn(invocationDescriptor, logger)) {
             Object loggedResult = (method.getReturnType() == Void.TYPE) ? Void.TYPE : result;
             logStrategies.get(invocationDescriptor.getAfterSeverity()).logAfter(logger, methodName, args.length, loggedResult);
         }
+        MDC.remove("callingClass");
+        MDC.remove("callingMethod");
+        MDC.remove("elapsedTime");
         return result;
     }
 

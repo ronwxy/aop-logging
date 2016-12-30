@@ -129,11 +129,13 @@ Commons logging configured to log using log4j framework:
     2014-05-21 23:22:31,074 TRACE [benchmark.LoggableServiceImpl] (main) - returning: aopLogMethod(2 arguments):34
 
 
-4.MDC variables(since 0.4.0)
+4.MDC variables(since 0.6.0)
 
   reqId: %X{reqId}, marked as unique request
   
   elapsedTime: %X{elapsedTime}, the method invoked consume times in mills.
   
-  elapsedSeconds: %X{elapsedSeconds}, the method invoked consume times in seconds.
+  callingClass: %X{callingClass}, the method invoked on class.
+  
+  callingMethod: %X{callingMethod}, the method invoked on class method.
   
