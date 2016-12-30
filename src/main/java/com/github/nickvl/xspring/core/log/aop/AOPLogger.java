@@ -71,7 +71,7 @@ public class AOPLogger implements InitializingBean {
 
         String methodName = method.getName();
 
-        MDC.put("callingClass", method.getClass().getName());
+        MDC.put("callingClass", method.getDeclaringClass().getName());
         MDC.put("callingMethod", methodName);
 
         if (beforeLoggingOn(invocationDescriptor, logger)) {
