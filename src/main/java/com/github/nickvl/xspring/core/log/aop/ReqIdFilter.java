@@ -3,6 +3,7 @@ package com.github.nickvl.xspring.core.log.aop;
 import org.slf4j.MDC;
 
 import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 public class ReqIdFilter implements Filter {
@@ -16,7 +17,12 @@ public class ReqIdFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response,
                          FilterChain chain) throws IOException, ServletException {
 
-        MDC.put("reqId", ObjectId.get().toHexString());
+        HttpServletRequest httpServletRequest = (HttpServletRequest)request;
+        String reqId = httpServletRequest.getHeader("Req-Id");
+        if(reqId == null || "".equals(reqId)){
+            reqId = ObjectId.get().toHexString();
+        }
+        MDC.put("reqId", reqId);
         try {
             chain.doFilter(request, response);
         } finally {
