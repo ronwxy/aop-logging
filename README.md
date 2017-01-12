@@ -72,11 +72,28 @@
         <filter-name>aopLogReqIdFilter</filter-name>
         <filter-class>com.github.nickvl.xspring.core.log.aop.ReqIdFilter</filter-class>
     </filter>
-    
+
     <filter-mapping>
         <filter-name>aopLogReqIdFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+
+
+    or register in springboot like this:
+
+
+    @Bean
+    public FilterRegistrationBean getDemoFilter(){
+        ReqIdFilter reqIdFilter=new ReqIdFilter();
+        FilterRegistrationBean registrationBean=new FilterRegistrationBean();
+        registrationBean.setFilter(reqIdFilter);
+        List<String> urlPatterns=new ArrayList<String>();
+        urlPatterns.add("/*");
+        registrationBean.setUrlPatterns(urlPatterns);
+        registrationBean.setOrder(100);
+        return registrationBean;
+    }
+
 
 
 2.Add log annotation on required methods
@@ -132,10 +149,10 @@ Commons logging configured to log using log4j framework:
 4.MDC variables(since 0.7.0)
 
   reqId: %X{reqId}, marked as unique request
-  
+
   elapsedTime: %X{elapsedTime}, the method invoked consume times in mills.
-  
+
   callingClass: %X{callingClass}, the method invoked on class.
-  
+
   callingMethod: %X{callingMethod}, the method invoked on class method.
-  
+
