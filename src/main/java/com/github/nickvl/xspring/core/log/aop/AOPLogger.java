@@ -5,21 +5,22 @@
 
 package com.github.nickvl.xspring.core.log.aop;
 
+import org.apache.commons.logging.Log;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.MDC;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
+import org.springframework.util.ReflectionUtils;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
-import org.apache.commons.logging.Log;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
-import org.springframework.util.ReflectionUtils;
 
 
 /**
@@ -60,6 +61,7 @@ public class AOPLogger implements InitializingBean {
             + " || execution(* (@(@com.github.nickvl.xspring.core.log.aop.annotation.Logging *) *).*(..))"  // per class
             , argNames = "joinPoint")
     public Object logTheMethod(ProceedingJoinPoint joinPoint) throws Throwable {
+
         Object[] args = joinPoint.getArgs();
         Log logger = logAdapter.getLog(joinPoint.getTarget().getClass());
         Method method = extractMethod(joinPoint);
@@ -69,10 +71,15 @@ public class AOPLogger implements InitializingBean {
 
         String methodName = method.getName();
 
+        MDC.put("callingClass", method.getDeclaringClass().getName());
+        MDC.put("callingMethod", methodName);
+
         if (beforeLoggingOn(invocationDescriptor, logger)) {
             ArgumentDescriptor argumentDescriptor = getArgumentDescriptor(descriptor, method, args.length);
             logStrategies.get(invocationDescriptor.getBeforeSeverity()).logBefore(logger, methodName, args, argumentDescriptor);
         }
+
+        long startTime = System.currentTimeMillis();
 
         Object result;
         if (invocationDescriptor.getExceptionAnnotation() == null) {
@@ -81,6 +88,8 @@ public class AOPLogger implements InitializingBean {
             try {
                 result = joinPoint.proceed(args);
             } catch (Exception e) {
+                long endTime = System.currentTimeMillis();
+                MDC.put("elapsedTime", Long.toString(endTime - startTime));
                 ExceptionDescriptor exceptionDescriptor = getExceptionDescriptor(descriptor, invocationDescriptor);
                 Class<? extends Exception> resolved = exceptionResolver.resolve(exceptionDescriptor, e);
                 if (resolved != null) {
@@ -92,10 +101,15 @@ public class AOPLogger implements InitializingBean {
                 throw e;
             }
         }
+        long endTime = System.currentTimeMillis();
+        MDC.put("elapsedTime", Long.toString(endTime - startTime));
         if (afterLoggingOn(invocationDescriptor, logger)) {
             Object loggedResult = (method.getReturnType() == Void.TYPE) ? Void.TYPE : result;
             logStrategies.get(invocationDescriptor.getAfterSeverity()).logAfter(logger, methodName, args.length, loggedResult);
         }
+        MDC.remove("callingClass");
+        MDC.remove("callingMethod");
+        MDC.remove("elapsedTime");
         return result;
     }
 

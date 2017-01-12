@@ -7,7 +7,7 @@
       <dependency>
             <groupId>com.ieyecloud</groupId>
              <artifactId>xspring-aop-logging</artifactId>
-            <version>0.3.4-SNAPSHOT</version>
+            <version>0.7.1</version>
        </dependency>
     ...
     </dependencies>
@@ -128,3 +128,14 @@ Commons logging configured to log using log4j framework:
     2014-05-21 23:22:31,073 TRACE [benchmark.LoggableServiceImpl] (main) - calling: aopLogMethod(2 arguments: b=33)
     2014-05-21 23:22:31,074 TRACE [benchmark.LoggableServiceImpl] (main) - returning: aopLogMethod(2 arguments):34
 
+
+4.MDC variables(since 0.7.0)
+
+  reqId: %X{reqId}, marked as unique request
+  
+  elapsedTime: %X{elapsedTime}, the method invoked consume times in mills.
+  
+  callingClass: %X{callingClass}, the method invoked on class.
+  
+  callingMethod: %X{callingMethod}, the method invoked on class method.
+  
