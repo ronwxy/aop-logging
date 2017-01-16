@@ -7,7 +7,7 @@
       <dependency>
             <groupId>com.ieyecloud</groupId>
              <artifactId>xspring-aop-logging</artifactId>
-            <version>0.7.1</version>
+            <version>0.7.5</version>
        </dependency>
     ...
     </dependencies>
