@@ -71,7 +71,14 @@ public class AOPLogger implements InitializingBean {
 
         String methodName = method.getName();
 
-        MDC.put("callingClass", method.getDeclaringClass().getName());
+        String callingClassName = method.getDeclaringClass().getName();
+        if(callingClassName.startsWith("com.alibaba.dubbo.common.bytecode")){
+            Class<?>[] interfaces= method.getDeclaringClass().getInterfaces();
+            if(interfaces != null && interfaces.length >0 ){
+                callingClassName = interfaces[interfaces.length -1].getName();
+            }
+        }
+        MDC.put("callingClass", callingClassName);
         MDC.put("callingMethod", methodName);
 
         if (beforeLoggingOn(invocationDescriptor, logger)) {
@@ -110,6 +117,7 @@ public class AOPLogger implements InitializingBean {
         MDC.remove("callingClass");
         MDC.remove("callingMethod");
         MDC.remove("elapsedTime");
+
         return result;
     }
 
