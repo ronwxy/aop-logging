@@ -21,6 +21,7 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.stream.Stream;
 
 
 /**
@@ -72,10 +73,10 @@ public class AOPLogger implements InitializingBean {
         String methodName = method.getName();
 
         String callingClassName = method.getDeclaringClass().getName();
-        if(callingClassName.startsWith("com.alibaba.dubbo.common.bytecode")){
-            Class<?>[] interfaces= method.getDeclaringClass().getInterfaces();
-            if(interfaces != null && interfaces.length >0 ){
-                callingClassName = interfaces[interfaces.length -1].getName();
+        if (callingClassName.startsWith("com.alibaba.dubbo.common.bytecode")) {
+            Class<?>[] interfaces = method.getDeclaringClass().getInterfaces();
+            if (interfaces != null && interfaces.length > 0) {
+                callingClassName = Stream.of(interfaces).map(Class::getName).filter(className -> className.startsWith("com.ieyecloud.rpc")).findFirst().orElse(null);
             }
         }
         MDC.put("callingClass", callingClassName);
