@@ -1,5 +1,6 @@
 package com.github.nickvl.xspring.core.log.aop;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.MDC;
 
 import javax.servlet.*;
@@ -18,8 +19,12 @@ public class ReqIdFilter implements Filter {
                          FilterChain chain) throws IOException, ServletException {
 
         HttpServletRequest httpServletRequest = (HttpServletRequest)request;
+
         String reqId = httpServletRequest.getHeader("Req-Id");
-        if(reqId == null || "".equals(reqId)){
+        if(StringUtils.isEmpty(reqId)){
+            reqId = httpServletRequest.getParameter("req_id");
+        }
+        if(StringUtils.isEmpty(reqId)) {
             reqId = ObjectId.get().toHexString();
         }
         MDC.put("reqId", reqId);
