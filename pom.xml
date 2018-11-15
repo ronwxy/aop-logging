@@ -2,9 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.ieyecloud</groupId>
+    <groupId>com.springboot.base</groupId>
     <artifactId>xspring-aop-logging</artifactId>
-    <version>0.7.6</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
     <name>NG xSpring AOP logging</name>
     <description>Declarative annotation based logging utility for Java Spring applications</description>
@@ -51,9 +51,9 @@
         <ng-xSpring.build.directory>target</ng-xSpring.build.directory>
 
 
-        <url.jsNexus>http://10.0.13.124:8081/nexus/content/groups/public</url.jsNexus>
-        <url.jsRep>http://10.0.13.124:8081/nexus/content/repositories/JS-Rep/</url.jsRep>
-        <url.snapshot.jsRep>http://10.0.13.124:8081/nexus/content/repositories/snapshots</url.snapshot.jsRep>
+        <nexus.public>http://{nexusIp:nexusPort}/nexus/content/groups/public</nexus.public>
+        <nexus.myrep>http://{nexusIp:nexusPort}/nexus/content/repositories/{Your-Rep-Name}/</nexus.myrep>
+        <nexus.snapshots>http://{nexusIp:nexusPort}/nexus/content/repositories/snapshots</nexus.snapshots>
     </properties>
 
     <dependencies>
@@ -143,7 +143,7 @@
 
         <repository>
             <id>nexus</id>
-            <url>${url.jsNexus}</url>
+            <url>${nexus.public}</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -157,7 +157,7 @@
 
         <pluginRepository>
             <id>nexus</id>
-            <url>${url.jsNexus}</url>
+            <url>${nexus.public}</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -170,13 +170,13 @@
 
     <distributionManagement>
         <repository>
-            <id>JS-Rep</id>
-            <name>Jishi Rep</name>
-            <url>${url.jsRep}</url>
+            <id>My-Rep</id>
+            <name>My Rep</name>
+            <url>${nexus.myrep}</url>
         </repository>
         <snapshotRepository>
             <id>snapshots</id>
-            <url>${url.snapshot.jsRep}</url>
+            <url>${nexus.snapshots}</url>
             <uniqueVersion>true</uniqueVersion>
         </snapshotRepository>
     </distributionManagement>
@@ -184,7 +184,6 @@
 
     <build>
         <directory>${ng-xSpring.build.directory}</directory>
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

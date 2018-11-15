@@ -72,15 +72,15 @@ public class AOPLogger implements InitializingBean {
 
         String methodName = method.getName();
 
-        String callingClassName = method.getDeclaringClass().getName();
-        if (callingClassName.startsWith("com.alibaba.dubbo.common.bytecode")) {
-            Class<?>[] interfaces = method.getDeclaringClass().getInterfaces();
-            if (interfaces != null && interfaces.length > 0) {
-                callingClassName = Stream.of(interfaces).map(Class::getName).filter(className -> className.startsWith("com.ieyecloud.rpc")).findFirst().orElse(null);
-            }
-        }
-        MDC.put("callingClass", callingClassName);
-        MDC.put("callingMethod", methodName);
+//        String callingClassName = method.getDeclaringClass().getName();
+//        if (callingClassName.startsWith("com.alibaba.dubbo.common.bytecode")) {
+//            Class<?>[] interfaces = method.getDeclaringClass().getInterfaces();
+//            if (interfaces != null && interfaces.length > 0) {
+//                callingClassName = Stream.of(interfaces).map(Class::getName).filter(className -> className.startsWith("com.yourpackagename.rpc")).findFirst().orElse(null);
+//            }
+//        }
+//        MDC.put("callingClass", callingClassName);
+//        MDC.put("callingMethod", methodName);
 
         if (beforeLoggingOn(invocationDescriptor, logger)) {
             ArgumentDescriptor argumentDescriptor = getArgumentDescriptor(descriptor, method, args.length);
@@ -115,8 +115,8 @@ public class AOPLogger implements InitializingBean {
             Object loggedResult = (method.getReturnType() == Void.TYPE) ? Void.TYPE : result;
             logStrategies.get(invocationDescriptor.getAfterSeverity()).logAfter(logger, methodName, args.length, loggedResult);
         }
-        MDC.remove("callingClass");
-        MDC.remove("callingMethod");
+//        MDC.remove("callingClass");
+//        MDC.remove("callingMethod");
         MDC.remove("elapsedTime");
 
         return result;
