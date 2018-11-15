@@ -1,13 +1,14 @@
+
+*该项目基于https://github.com/nickvl/aop-logging.git （添加了ReqId标记某次客户端请求：com.github.nickvl.xspring.core.log.aop.ReqIdFilter, 添加了方法执行时长：com.github.nickvl.xspring.core.log.aop.AOPLogger.logTheMethod方法中elapsedTime）*
+*如果需要跟踪基于dubbo的远程方法调用，需将com.github.nickvl.xspring.core.log.aop.AOPLogger.logTheMethod方法内的注释打开*
+
 ### Add the dependency to your maven pom.xml
-**The utility is uploaded to The Maven Central Repository**
-
-
     <dependencies>
     ...
       <dependency>
-            <groupId>com.ieyecloud</groupId>
+            <groupId>com.springboot.base</groupId>
              <artifactId>xspring-aop-logging</artifactId>
-            <version>0.7.6</version>
+            <version>1.0.0</version>
        </dependency>
     ...
     </dependencies>
@@ -152,6 +153,8 @@ Commons logging configured to log using log4j framework:
 
   elapsedTime: %X{elapsedTime}, the method invoked consume times in mills.
 
+  *the two below should uncomment code in com.github.nickvl.xspring.core.log.aop.AOPLogger.logTheMethod*
+  
   callingClass: %X{callingClass}, the method invoked on class.
 
   callingMethod: %X{callingMethod}, the method invoked on class method.
