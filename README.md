@@ -1,6 +1,6 @@
 
-*该项目基于https://github.com/nickvl/aop-logging.git （添加了ReqId标记某次客户端请求：com.github.nickvl.xspring.core.log.aop.ReqIdFilter, 添加了方法执行时长：com.github.nickvl.xspring.core.log.aop.AOPLogger.logTheMethod方法中elapsedTime）*
-*如果需要跟踪基于dubbo的远程方法调用，需将com.github.nickvl.xspring.core.log.aop.AOPLogger.logTheMethod方法内的注释打开*
+- 该项目基于https://github.com/nickvl/aop-logging.git （添加了ReqId标记某次客户端请求：com.github.nickvl.xspring.core.log.aop.ReqIdFilter, 添加了方法执行时长：com.github.nickvl.xspring.core.log.aop.AOPLogger.logTheMethod方法中elapsedTime）
+- 如果需要跟踪基于dubbo的远程方法调用，需将com.github.nickvl.xspring.core.log.aop.AOPLogger.logTheMethod方法内的注释打开
 
 ### Add the dependency to your maven pom.xml
     <dependencies>
@@ -147,7 +147,7 @@ Commons logging configured to log using log4j framework:
     2014-05-21 23:22:31,074 TRACE [benchmark.LoggableServiceImpl] (main) - returning: aopLogMethod(2 arguments):34
 
 
-4.MDC variables(since 0.7.0)
+4.MDC variables
 
   reqId: %X{reqId}, marked as unique request
 
