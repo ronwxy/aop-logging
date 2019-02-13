@@ -159,6 +159,7 @@ Commons logging configured to log using log4j framework:
 
   callingMethod: %X{callingMethod}, the method invoked on class method.
   
-5. 注意，打包时出现javadoc报错，则需跳过javadoc，如：  mvn clean install -Dmaven.javadoc.skip=true
+
+5.注意，打包时出现javadoc报错，则需跳过javadoc，如：  mvn clean install -Dmaven.javadoc.skip=true
 
 
