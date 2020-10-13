@@ -43,7 +43,7 @@
         <aspectj.version>1.9.4</aspectj.version>
         <servlet.version>4.0.1</servlet.version>
         <commons-lang3.version>3.8.1</commons-lang3.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <easymock.version>3.2</easymock.version>
 
         <!-- Global build directory, [target] is a default value. It could be overridden right here or in settings.xml
